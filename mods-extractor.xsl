@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mods="http://www.loc.gov/mods/v3"
-    xmlns="http://www.loc.gov/mods/v3" exclude-result-prefixes="xs" version="2.0">
-    <!-- 
+<!-- 
     About this stylesheet:
     
     This transform is from MODS metadata into an XML structure with Drupal
@@ -24,7 +21,11 @@
     
     [1] https://docs.google.com/spreadsheets/d/18u2qFJ014IIxlVpM3JXfDEFccwBZcoFsjbBGpvL0jJI/edit#gid=0
     
-    -->
+-->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns="http://www.loc.gov/mods/v3" exclude-result-prefixes="xs" version="2.0">
+   
     <xsl:output method="xml" indent="yes"/>
 
     <!-- MODS -->
@@ -38,7 +39,7 @@
     <xsl:template match="text()"/>
 
     <!-- MODS titleinfo -->
-    <!-- Format title - from MODS to DC transform (normalize-space() added). -->
+    <!-- Format title - from MODS to DC transform, with (normalize-space() added). -->
     <xsl:template name="titleInfoFormatter">
         <xsl:value-of select="mods:nonSort/normalize-space()"/>
         <xsl:if test="mods:nonSort/normalize-space()">

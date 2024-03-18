@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- About this stylesheet
+        
+        This stylesheet imports mods-extractor.xsl so that any template in this file 
+        will take precedence over the identical (named or select) template in mods-extractor.xsl.
+        
+        This is where I put extra matching and extracting code that applies to all of my MODS
+        that is not in the MIG mapping. Corresponding templates are added to mods-nullifier-custom.xsl
+        to indicate that we've extracted those values.
+        
+        I have several collections that need special treatment so I created additional files
+        named mods-extractor-custom-collectionName.xsl which import this spreadsheet the way this
+        spreadsheet imports mods-extractor.xsl
+-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns="http://www.loc.gov/mods/v3"
     exclude-result-prefixes="xs"
     version="2.0">
-    <!-- About this stylesheet
-        
-        This is where I put extra matching and extracting code that applies to all of islandarchives. 
-        -->
-    
+
     <xsl:import href="mods-extractor.xsl"/>
     
     <xsl:template name="nameRole">
