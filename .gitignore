@@ -3,3 +3,8 @@ output/*
 sample/*
 bad/*
 *.xpr
+merged.xml
+nullified/*
+extracted/*
+merged-*
+
