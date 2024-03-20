@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!-- About this stylesheet
+   
+   This stylesheet includes an identity transform which will copy all values
+   (text nodes and attributes) that are not matched by any other templates within
+   this file. 
+   
+   The other templates in this file match the precise elements (text nodes and
+   attributes) that are extracted by mods-extractor.xsl.
+   
+   This transform also inserts a <file> element containing the filename.
+   
+   Therefore the result of this is a pared down mods with only the non-mapped
+   content, and the <file> element present. It will still include empty elements.
+   
+   To make it easier to scan the output, you can run cleanup.xsl on the output.
+   You can also merge the results from multiple files together with merge.xsl.
+-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     xmlns:mods="http://www.loc.gov/mods/v3"
@@ -11,7 +27,7 @@
 
     <!-- IdentityTransform  from http://www.usingxml.com/Transforms/XslIdentity -->
     <xsl:output indent="yes"/>
-    <xsl:template match="/ | @* | node()">
+    <xsl:template match="/ | @* | node()" priority="-2">
         <xsl:copy>
             <xsl:apply-templates select="@* | node()"/>
         </xsl:copy>
@@ -20,11 +36,17 @@
     <xsl:template match="mods:mods">
         <xsl:copy>
             <xsl:apply-templates select="@* | node()"/>
+            <!-- add a <file> tag with the name of the file. -->
             <xsl:element name="file"><xsl:value-of select="tokenize(base-uri(),'/')[last()]"/></xsl:element>
             
         </xsl:copy>
     </xsl:template>
-
+    
+    <!-- Erase attributes from already empty elements. Dont' remove if there's a 
+        valueURI as that counts as "content".  -->
+    <xsl:template match="*[@* and not(descendant-or-self::*/@valueURI) and not(descendant-or-self::text())]/@*" priority="-1"/>
+    
+    
     <!-- Start Metadata extraction -->
     <!-- Elements matched here will not be part of the output. -->
 
