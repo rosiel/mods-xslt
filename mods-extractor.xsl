@@ -99,13 +99,13 @@
 
     <!-- MODS Type of resource (uncontrolled but uppercased) -->
     <xsl:template match="mods:typeOfResource">
+        <xsl:comment>TODO: Reconcile resourceType to taxonomy.</xsl:comment>
         <field_resource_type>
             <xsl:variable name="resourceType" select="./text()"/>
             <xsl:variable name="resourceType"
                 select="concat(upper-case(substring($resourceType, 1, 1)), substring($resourceType, 2))"/>
             <xsl:value-of select="$resourceType"/>
         </field_resource_type>
-        <xsl:comment>TODO: Reconcile resourceType to taxonomy.</xsl:comment>
         <xsl:if test="@collection = 'yes'">
             <field_resource_type>
                 <xsl:text>Collection</xsl:text>
@@ -449,9 +449,9 @@
     <xsl:template name="subject">
         <!-- MIG mapping indicates breaking up composed headings. See LC's MODS to DC for an alternative.-->
         <xsl:for-each select="mods:topic">
-            <field_subject_general>
-                <xsl:value-of select="."/>
-            </field_subject_general>
+            <field_subject>
+                <xsl:value-of select="normalize-space(.)"/>
+            </field_subject>
         </xsl:for-each>
         <xsl:for-each select="mods:name">
             <field_subjects_name>
@@ -460,7 +460,7 @@
         </xsl:for-each>
         <xsl:for-each select="mods:geographic">
             <field_geographic_subject>
-                <xsl:value-of select="."/>
+                <xsl:value-of select="normalize-space(.)"/>
             </field_geographic_subject>
         </xsl:for-each>
         <!-- note: hierarchicalGeographic remains "composed": Canada[double dash]Prince Edward Island[double dash]Charlottetown. -->
@@ -482,7 +482,7 @@
         <xsl:if test="mods:temporal">
             <field_temporal_subject>
                 <xsl:for-each select="mods:temporal">
-                    <xsl:value-of select="."/>
+                    <xsl:value-of select="normalize-space(.)"/>
                     <xsl:if test="(text() and position() != last())">-</xsl:if>
                 </xsl:for-each>
             </field_temporal_subject>
