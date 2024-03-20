@@ -21,6 +21,7 @@
 
     <xsl:import href="mods-extractor.xsl"/>
     
+    <!-- CUSTOM: Name role text is mapped to relator code, even if no authority -->
     <xsl:template name="nameRole">
         <!--relator term, defaults to relators:ctb per mapping -->
         <xsl:choose>
@@ -30,7 +31,7 @@
                     select="mods:role/mods:roleTerm[@authority = 'marcrelator' and @type = 'code']/text()"/>
                 <xsl:text>:</xsl:text>
             </xsl:when>
-            <!-- CUSTOM: Name role text is mapped to relator code, even if no authority -->
+            <!-- CUSTOM: Here's where name role text is mapped to relator code, even if no authority -->
             <xsl:when
                 test="mods:role/mods:roleTerm[@type = 'text']">
                 <xsl:variable name="roleText"

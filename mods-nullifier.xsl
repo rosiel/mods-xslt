@@ -27,7 +27,7 @@
 
     <!-- IdentityTransform  from http://www.usingxml.com/Transforms/XslIdentity -->
     <xsl:output indent="yes"/>
-    <xsl:template match="/ | @* | node()">
+    <xsl:template match="/ | @* | node()" priority="-2">
         <xsl:copy>
             <xsl:apply-templates select="@* | node()"/>
         </xsl:copy>
@@ -41,7 +41,12 @@
             
         </xsl:copy>
     </xsl:template>
-
+    
+    <!-- Erase attributes from already empty elements. Dont' remove if there's a 
+        valueURI as that counts as "content".  -->
+    <xsl:template match="*[@* and not(descendant-or-self::*/@valueURI) and not(descendant-or-self::text())]/@*" priority="-1"/>
+    
+    
     <!-- Start Metadata extraction -->
     <!-- Elements matched here will not be part of the output. -->
 
