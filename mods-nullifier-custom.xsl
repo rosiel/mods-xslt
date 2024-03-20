@@ -3,7 +3,8 @@
     
     This stylesheet removes text elements and attributes that are in mods-extractor-custom.xsl.
     It imports mods-nullifier.xsl so that templates in this stylesheet will override
-    templates with the same name or select values in mods-nullifier.xsl.
+    templates with the same name or select values in mods-nullifier.xsl. You can also make custom sheets that
+    import this one to have a per-collection mapping.
     
     See mods-nullifier.xsl for more details.
 -->
