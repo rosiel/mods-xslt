@@ -60,20 +60,20 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template match="mods:mods/mods:titleInfo[not(@type)][1]">
+    <xsl:template match="mods:titleInfo[not(@type)][1]">
         <title>
             <xsl:call-template name="titleInfoFormatter"/>
         </title>
     </xsl:template>
 
     <xsl:template
-        match="mods:mods/mods:titleInfo[@type = 'alternative' or @type = 'uniform' or @type = 'abbreviated']">
+        match="mods:titleInfo[@type = 'alternative' or @type = 'uniform' or @type = 'abbreviated']">
         <field_alt_title>
             <xsl:call-template name="titleInfoFormatter"/>
         </field_alt_title>
     </xsl:template>
 
-    <xsl:template match="mods:mods/mods:titleInfo[@type = 'translated']">
+    <xsl:template match="mods:titleInfo[@type = 'translated']">
         <xsl:variable name="titleLang" select="@xml:lang"/>
         <xsl:variable name="translatedTitleField" select="concat('TRANSLATED_TITLE--', $titleLang)"/>
         <xsl:comment>Translated title in [<xsl:value-of select="$titleLang"/>]. Workbench does not have the ability to add multilingual metadata. A translated title is present.</xsl:comment>
@@ -84,7 +84,7 @@
 
     <!-- MODS name -->
     <xsl:template
-        match="mods:mods/mods:name[(@type = 'personal' or @type = 'corporate' or @type = 'family') and mods:namePart/text()]">
+        match="mods:name[(@type = 'personal' or @type = 'corporate' or @type = 'family') and mods:namePart/text()]">
         <xsl:if test="count(mods:namePart/text()) > 0">
             <field_linked_agent>
                 <!-- Name role -->
@@ -98,7 +98,7 @@
     </xsl:template>
 
     <!-- MODS Type of resource (uncontrolled but uppercased) -->
-    <xsl:template match="mods:mods/mods:typeOfResource">
+    <xsl:template match="mods:typeOfResource">
         <field_resource_type>
             <xsl:variable name="resourceType" select="./text()"/>
             <xsl:variable name="resourceType"
@@ -114,7 +114,7 @@
     </xsl:template>
 
     <!-- MODS Genre -->
-    <xsl:template match="mods:mods/mods:genre">
+    <xsl:template match="mods:genre">
         <field_genre>
             <xsl:value-of select="./text()"/>
         </field_genre>
@@ -122,72 +122,82 @@
 
     <!-- OriginInfo -->
     <xsl:template
-        match="mods:mods/mods:originInfo/mods:place/mods:placeTerm[@authority = 'marccountry' and @type = 'code']">
+        match="mods:originInfo/mods:place/mods:placeTerm[@authority = 'marccountry' and @type = 'code']">
         <field_place_published_country>
-            <xsl:value-of select="normalize-space(.)"/>
+            <xsl:variable name="countryCode" select="normalize-space(.)"/>
+            <xsl:variable name="countryText"
+                select="document('marccountry.xml')/countries/country[@code = $countryCode]/text()"/>
+            <xsl:choose>
+                <xsl:when test="$countryText">
+                    <xsl:value-of select="$countryText"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$countryCode"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </field_place_published_country>
     </xsl:template>
     <xsl:template
-        match="mods:mods/mods:originInfo/mods:place/mods:placeTerm[not(@type) or @type = 'text']">
+        match="mods:originInfo/mods:place/mods:placeTerm[not(@type) or @type = 'text']">
         <field_place_published>
             <xsl:value-of select="normalize-space(.)"/>
         </field_place_published>
     </xsl:template>
-    <xsl:template match="mods:mods/mods:originInfo/mods:publisher">
+    <xsl:template match="mods:originInfo/mods:publisher">
         <field_linked_agent>
             <xsl:text>relators:pbl:corporate_body:</xsl:text>
             <xsl:value-of select="normalize-space()"/>
         </field_linked_agent>
     </xsl:template>
-    <xsl:template match="mods:mods/mods:originInfo/mods:dateIssued">
+    <xsl:template match="mods:originInfo/mods:dateIssued">
         <field_edtf_date_issued>
             <xsl:value-of select="normalize-space()"/>
         </field_edtf_date_issued>
     </xsl:template>
-    <xsl:template match="mods:mods/mods:originInfo/mods:dateCreated">
+    <xsl:template match="mods:originInfo/mods:dateCreated">
         <field_edtf_date_created>
             <xsl:value-of select="normalize-space()"/>
         </field_edtf_date_created>
     </xsl:template>
-    <xsl:template match="mods:mods/mods:originInfo/mods:dateValid">
+    <xsl:template match="mods:originInfo/mods:dateValid">
         <field_date_valid>
             <xsl:value-of select="normalize-space()"/>
         </field_date_valid>
     </xsl:template>
-    <xsl:template match="mods:mods/mods:originInfo/mods:dateCaptured">
+    <xsl:template match="mods:originInfo/mods:dateCaptured">
         <field_date_captured>
             <xsl:value-of select="normalize-space()"/>
         </field_date_captured>
     </xsl:template>
-    <xsl:template match="mods:mods/mods:originInfo/mods:dateModified">
+    <xsl:template match="mods:originInfo/mods:dateModified">
         <field_date_modified>
             <xsl:value-of select="normalize-space()"/>
         </field_date_modified>
     </xsl:template>
-    <xsl:template match="mods:mods/mods:originInfo/mods:copyrightDate">
+    <xsl:template match="mods:originInfo/mods:copyrightDate">
         <field_copyright_date>
             <xsl:value-of select="normalize-space()"/>
         </field_copyright_date>
     </xsl:template>
-    <xsl:template match="mods:mods/mods:originInfo/mods:dateOther">
+    <xsl:template match="mods:originInfo/mods:dateOther">
         <field_edtf_date>
             <xsl:value-of select="normalize-space()"/>
         </field_edtf_date>
     </xsl:template>
 
-    <xsl:template match="mods:mods/mods:originInfo/mods:frequency">
+    <xsl:template match="mods:originInfo/mods:frequency">
         <field_frequency>
             <xsl:value-of select="normalize-space()"/>
         </field_frequency>
     </xsl:template>
 
-    <xsl:template match="mods:mods/mods:originInfo/mods:issuance">
+    <xsl:template match="mods:originInfo/mods:issuance">
         <field_mode_of_issuance>
             <xsl:value-of select="normalize-space()"/>
         </field_mode_of_issuance>
     </xsl:template>
 
-    <xsl:template match="mods:mods/mods:originInfo/mods:edition">
+    <xsl:template match="mods:originInfo/mods:edition">
         <field_edition>
             <xsl:value-of select="normalize-space()"/>
         </field_edition>
@@ -195,7 +205,7 @@
 
 
     <!-- MDOS Language -->
-    <xsl:template match="mods:mods/mods:language">
+    <xsl:template match="mods:language">
         <field_language>
             <xsl:choose>
                 <xsl:when test="mods:languageTerm[@type = 'text']">
@@ -222,20 +232,20 @@
 
 
     <!-- MODS physical description -->
-    <xsl:template match="mods:mods/mods:physicalDescription/mods:form">
+    <xsl:template match="mods:physicalDescription/mods:form">
         <field_physical_form>
             <xsl:value-of select="text()"/>
         </field_physical_form>
         <xsl:comment>TODO: map form to taxonomy.</xsl:comment>
     </xsl:template>
 
-    <xsl:template match="mods:mods/mods:physicalDescription/mods:extent">
+    <xsl:template match="mods:physicalDescription/mods:extent">
         <field_extent>
             <xsl:value-of select="text()/normalize-space()"/>
         </field_extent>
     </xsl:template>
 
-    <xsl:template match="mods:mods/mods:physicalDescription/mods:internetMediaType">
+    <xsl:template match="mods:physicalDescription/mods:internetMediaType">
         <xsl:comment>Media type is a property of the media and will be calculated programmatically.</xsl:comment>
         <MIMETYPE>
             <xsl:value-of select="text()/normalize-space()"/>
@@ -243,21 +253,21 @@
     </xsl:template>
 
     <!-- MODS abstract -->
-    <xsl:template match="mods:mods/mods:abstract">
+    <xsl:template match="mods:abstract">
         <field_abstract>
             <xsl:value-of select="text()/normalize-space()"/>
         </field_abstract>
     </xsl:template>
 
     <!-- MODS table of contents -->
-    <xsl:template match="mods:mods/mods:tableOfContents">
+    <xsl:template match="mods:tableOfContents">
         <field_table_of_contents>
             <xsl:value-of select="text()/normalize-space()"/>
         </field_table_of_contents>
     </xsl:template>
 
     <!-- MODS note -->
-    <xsl:template match="mods:mods/mods:note">
+    <xsl:template match="mods:note">
         <field_note>
             <xsl:variable name="noteContent" select="normalize-space(.)"/>
             <xsl:choose>
@@ -466,7 +476,7 @@
         <!-- MIG mapping excludes all cartographic elements except coordinates. -->
         <xsl:for-each select="mods:cartographics/mods:coordinates">
             <field_coordinates>
-                <xsl:value-of select="."/>
+                <xsl:value-of select="normalize-space(.)"/>
             </field_coordinates>
         </xsl:for-each>
         <xsl:if test="mods:temporal">
@@ -478,4 +488,17 @@
             </field_temporal_subject>
         </xsl:if>
     </xsl:template>
+    
+    <xsl:template match="mods:relatedItem">
+        <xsl:variable name="type" select="@type"/>
+        <xsl:variable name="filename" select="tokenize(base-uri(),'/')[last()]" />
+        <xsl:variable name="index" select="position()"/>
+        <xsl:variable name="relfilename" select="concat('related-', $type, '-', $index, '-', $filename)"/>
+        <xsl:result-document method="xml" href="{$relfilename}">
+            <row>
+                <xsl:apply-templates select="*"/>
+            </row>
+        </xsl:result-document>
+    </xsl:template>
+    
 </xsl:stylesheet>
